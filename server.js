@@ -107,3 +107,65 @@ function viewEmployees() {
         })
     })
 }
+
+function viewRoles() {
+    const sql = 
+    `SELECT role.id, role.title, role.salary, department.dep_name AS department 
+    FROM role
+    INNER JOIN department ON role.department_id = department.id `;
+    console.log("Viewing all roles");
+    connection.query(sql, function(err, rows) {
+        if (err) throw err;
+        console.table(rows);
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'choice',
+                message: 'What do you want to do?',
+                choices: [
+                    'Main Menu',
+                    'Quit'
+                ],
+            }
+        ])
+        .then((answer) => {
+            switch (answer.choice) {
+                case 'Main Menu':
+                    start();
+                    break;
+                case 'Quit':
+                    quit();
+            }
+        })
+    })
+}
+
+function viewDepartments() {
+    const sql = 
+    `SELECT department.id AS id, department.dep_name AS department FROM department`;
+    console.log("Viewing all departments");
+    connection.query(sql, function(err, rows) {
+        if (err) throw err;
+        console.table(rows);
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'choice',
+                message: 'What do you want to do?',
+                choices: [
+                    'Main Menu',
+                    'Quit'
+                ],
+            }
+        ])
+        .then((answer) => {
+            switch (answer.choice) {
+                case 'Main Menu':
+                    start();
+                    break;
+                case 'Quit':
+                    quit();
+            }
+        })
+    })
+}
