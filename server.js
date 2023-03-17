@@ -169,3 +169,126 @@ function viewDepartments() {
         })
     })
 }
+
+function addDepartment () {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'addDep',
+            message: 'Whats the name of the new department?'
+        }
+    ])
+    .then(answer => {
+        const depSql = `INSERT INTO department (dep_name) VALUES (?)`;
+        connection.query(depSql, answer.addDep, (err, result) => {
+            if (err) throw err;
+            console.log('///////////////////////////////////')
+            console.log('Added ' +answer.addDep+ ' to departments')
+
+            viewDepartments();
+        })
+    })
+};
+
+function addRole () {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'addRole',
+            message: 'Whats the name of the new role?'
+        },
+        {
+            typw: 'input',
+            name: 'addSalary',
+            message: 'What is the salary for this role?'
+        }
+    ])
+    .then(answer => {
+        const roleInputs = [answer.addRole, answer.addSalary];
+        const roleSql = `SELECT dep_name, id FROM department`;
+        
+        connection.query(roleSql, (err, data) => {
+            if (err) throw err;
+
+        const deptList = data.map(({ dep_name, id }) => ({ name: dep_name, value: id}));
+        
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'roleDep',
+                message: 'What department is this role in?',
+                choices: deptList
+            }
+        ])
+            .then(answer => {
+                const deptList = answer.roleDep;
+                roleInputs.push(deptList)
+
+                const roleDeptSql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
+
+                connection.query(roleDeptSql, roleInputs, (err, result) => {
+                    if (err) throw err;
+                    console.log('Added ' + answer.addRole + ' to roles');
+
+                viewRoles();
+                })
+            })
+        })
+    })
+
+    // .then(answer => {
+    //     const roleSql = ``;
+    //     connection.query(roleSql, answer.addRole, (err, result) => {
+    //         if (err) throw err;
+    //         console.log('///////////////////////////////////')
+    //         console.log('Added ' +answer.addRole+ ' to departments')
+
+    //         viewRoles();
+    //     })
+    // })
+};
+
+function addEmployee () {
+    const roles = data.map(({ id, title }) => ({ name: title, value: id }));
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstName',
+            message: 'What is the employees first name?'
+        },
+        {
+            type: 'input',
+            name: 'lastName',
+            message: 'What is the employees last name?'
+        },
+        {
+            type: 'list',
+            name: 'role',
+            message: 'What is the employees role?',
+            choices: roles
+        },
+        {
+            type: 'list',
+            name: 'manager',
+            message: 'Who is the employees manager?',
+            choices: managers
+        }
+    ])
+        .then(answer => {
+            const userInputs = [answer.firstName, answer.lastName]
+            const roleSql = `SELECT role.id, role.title FROM role`;
+            const managerSql = `SELECT * FROM employee`;
+            const role = roleChoice.role;
+            connection.promise().query(roleSql, (err, data) => {
+                if (err) throw err;
+            connection.promise().query(managerSql, (err, data) => {
+                if (err) throw err;
+
+                const managers = data.map(({ id, first_name, last_name }) => ({ name: first_name + ' ' + last_name, value: id }));
+            })
+
+            userInputs.push(role);
+            
+            })
+        })
+}
