@@ -25,7 +25,7 @@ afterConnection = () =>
     console.log('|                       |')
     console.log('+-----------------------+')
 
-function start() {
+function start() {   
     inquirer.prompt([
         {
             type: 'list',
@@ -43,7 +43,7 @@ function start() {
             ],
 
         }
-    ])
+    ])      //runs selected function
     .then((answer) => {
         switch (answer.choice) {
             case 'View All Employees':
@@ -108,6 +108,7 @@ function viewEmployees() {
     })
 }
 
+// Function shows a list of roles
 function viewRoles() {
     const sql = 
     `SELECT role.id, role.title, role.salary, department.dep_name AS department 
@@ -139,7 +140,7 @@ function viewRoles() {
         })
     })
 }
-
+// Shows all the different departments
 function viewDepartments() {
     const sql = 
     `SELECT department.id AS id, department.dep_name AS department FROM department`;
@@ -169,7 +170,7 @@ function viewDepartments() {
         })
     })
 }
-
+// function adds department
 function addDepartment () {
     inquirer.prompt([
         {
@@ -189,7 +190,7 @@ function addDepartment () {
         })
     })
 };
-
+// Function adds a role
 function addRole () {
     inquirer.prompt([
         {
@@ -236,7 +237,7 @@ function addRole () {
         })
     })
 };
-
+// Adds an employee
 function addEmployee() {
     inquirer.prompt([
         {
